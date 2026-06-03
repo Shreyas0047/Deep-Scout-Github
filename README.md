@@ -22,13 +22,13 @@
   <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT">
   <img src="https://img.shields.io/badge/status-beta-yellow" alt="Beta">
   <img src="https://img.shields.io/pypi/v/deep-scout-github" alt="PyPI">
-  <img src="https://img.shields.io/github/actions/workflow/status/yourusername/deep-scout-github/scan.yml?branch=main" alt="CI">
+  <img src="https://img.shields.io/github/actions/workflow/status/Shreyas0047/deep-scout-github/scan.yml?branch=main" alt="CI">
   <img src="https://img.shields.io/badge/code%20style-ruff-261230" alt="Ruff">
 </p>
 
 ---
 
-Deep-Scout is a CLI tool that scans entire GitHub organizations for accidentally committed secrets — AWS keys, API tokens, database passwords, SSH private keys, and more. It uses **regex pattern matching** for known secret formats and **Shannon entropy analysis** to catch custom-formatted secrets, then provides actionable remediation steps for every finding.
+Deep-Scout is a CLI tool that scans entire GitHub organizations (or user accounts) for accidentally committed secrets — AWS keys, API tokens, database passwords, SSH private keys, and more. It uses **regex pattern matching** for known secret formats and **Shannon entropy analysis** to catch custom-formatted secrets, then provides actionable remediation steps for every finding.
 
 Built for security engineers, DevOps teams, and bug bounty hunters who need to protect their organizations from credential exposure.
 
@@ -36,7 +36,7 @@ Built for security engineers, DevOps teams, and bug bounty hunters who need to p
 
 ## Features
 
-- **Organization-wide scanning** — Scan all repos in a GitHub org with a single command
+- **Org & user scanning** — Scan all repos in an org or personal account — auto-detects the correct API endpoint
 - **Dual detection engines** — Regex (28 built-in patterns) + Shannon entropy analysis
 - **Intelligent whitelist** — Built-in false positive filtering (UUIDs, commit hashes, test keys, etc.) + user-extensible
 - **Live progress UI** — Real-time terminal dashboard with per-repo progress bars and findings count
@@ -54,7 +54,7 @@ Try Deep-Scout immediately on a local directory of synthetic secrets — no GitH
 
 ```bash
 # Clone the repo
-git clone https://github.com/yourusername/deep-scout-github
+git clone https://github.com/Shreyas0047/deep-scout-github
 cd deep-scout-github
 
 # Install
@@ -97,22 +97,24 @@ open deep-scout-reports/deep-scout-report-your-org.html
 pip install deep-scout-github
 
 # From source
-git clone https://github.com/yourusername/deep-scout-github
+git clone https://github.com/Shreyas0047/deep-scout-github
 cd deep-scout-github
 pip install -e .
 
-# Docker
-docker pull deepscout/deep-scout-github:latest
-docker run -e GITHUB_TOKEN=$GITHUB_TOKEN deepscout/deep-scout-github scan --org my-company
+# Docker (from source)
+docker build -t deep-scout-github .
+docker run -e GITHUB_TOKEN=$GITHUB_TOKEN deep-scout-github scan --org my-company
 ```
 
 ## Usage
 
-### Scan an organization
+### Scan an organization or user account
 
 ```bash
 deep-scout scan --org netflix
 ```
+
+The `--org` flag accepts both GitHub organization names and personal usernames — Deep-Scout auto-detects which endpoint to use.
 
 ### Scan a single repository
 
@@ -357,6 +359,7 @@ jobs:
       - name: Run Deep-Scout
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # For scanning user accounts, --org also accepts usernames
         run: |
           pip install deep-scout-github
           deep-scout scan --org ${{ github.repository_owner }} \
@@ -430,7 +433,7 @@ For each file:
 ## Development
 
 ```bash
-git clone https://github.com/yourusername/deep-scout-github
+git clone https://github.com/Shreyas0047/deep-scout-github
 cd deep-scout-github
 python -m venv venv
 source venv/bin/activate
