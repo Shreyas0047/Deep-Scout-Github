@@ -1,0 +1,6 @@
+# ⚠️ DEMO FILE — Synthetic Stripe keys for testing
+
+stripe:
+  publishable_key: pk_test_REPLACE_ME  # pragma: allowlist secret
+  secret_key: DEEP_SCOUT_STRIPE_DEMO_KEY_REPLACE_ME  # pragma: allowlist secret
+  webhook_secret: whsec_REPLACE_ME  # pragma: allowlist secret

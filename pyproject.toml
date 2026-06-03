@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "deep-scout-github"
+version = "1.0.0"
+description = "Deep reconnaissance on GitHub organizations to uncover accidentally committed secrets"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+keywords = ["security", "secret-scanning", "github", "credentials", "devsecops", "supply-chain-security"]
+
+authors = [
+    {name = "Shreyas S", email = "shreyas@deep-scout.io"},
+]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+    "Topic :: Software Development :: Quality Assurance",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "click>=8.1",
+    "requests>=2.31",
+    "pyyaml>=6.0",
+    "jinja2>=3.1",
+    "rich>=13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7",
+    "pytest-cov>=4",
+    "ruff>=0.1",
+    "mypy>=1.7",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/deep-scout-github"
+Repository = "https://github.com/yourusername/deep-scout-github"
+Documentation = "https://github.com/yourusername/deep-scout-github#readme"
+"Bug Tracker" = "https://github.com/yourusername/deep-scout-github/issues"
+
+[project.scripts]
+deep-scout = "deep_scout.cli:cli"
+
+[tool.setuptools.packages.find]
+include = ["deep_scout*"]
+
+[tool.setuptools.package-data]
+deep_scout = ["hooks/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.mypy]
+python_version = "3.10"
+strict = true

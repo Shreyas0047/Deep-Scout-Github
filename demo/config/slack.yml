@@ -1,0 +1,6 @@
+# ⚠️ DEMO FILE — Synthetic Slack webhook for testing
+
+slack:
+  webhook_url: https://hooks.slack.com/services/REPLACE/ME/WITH_YOUR_WEBHOOK  # pragma: allowlist secret
+  channel: "#alerts"
+  token: xoxb-REPLACE_ME_WITH_YOUR_TOKEN  # pragma: allowlist secret

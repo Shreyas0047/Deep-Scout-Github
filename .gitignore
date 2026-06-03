@@ -1,0 +1,38 @@
+__pycache__
+*.pyc
+*.pyo
+.venv
+venv
+*.egg-info
+dist
+build
+deep-scout-reports/
+
+# Project-level config — do NOT commit this
+# A committed .deep-scout.yaml could disable detection or whitelist secrets
+.deep-scout.yaml
+
+# Logo placeholder (replace with your generated logo)
+logo.png
+
+# Environment files — never commit these
+.env
+.env.local
+.env.*
+*.env
+
+# IDE & editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Shell history (if repo is in home dir)
+.zsh_history
+.bash_history

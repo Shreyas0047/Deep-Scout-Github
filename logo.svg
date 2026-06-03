@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120" width="400" height="120">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0d1117"/>
+      <stop offset="100%" style="stop-color:#161b22"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#58a6ff"/>
+      <stop offset="100%" style="stop-color:#1f6feb"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#58a6ff"/>
+      <stop offset="100%" style="stop-color:#3fb950"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="400" height="120" rx="16" fill="url(#bg)" stroke="#30363d" stroke-width="1"/>
+
+  <g transform="translate(30, 20)">
+    <path d="M50 0 L90 18 L90 50 C90 72 70 88 50 96 C30 88 10 72 10 50 L10 18 Z"
+          fill="url(#shield)" opacity="0.9"/>
+    <path d="M50 12 L78 24 L78 48 C78 64 64 76 50 82 C36 76 22 64 22 48 L22 24 Z"
+          fill="#0d1117" opacity="0.3"/>
+    <path d="M35 45 L45 55 L65 35" stroke="#3fb950" stroke-width="4" fill="none"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <g transform="translate(130, 25)">
+    <circle cx="60" cy="35" r="22" stroke="#58a6ff" stroke-width="2.5" fill="none" opacity="0.4"/>
+    <circle cx="60" cy="35" r="12" stroke="#58a6ff" stroke-width="2" fill="none" opacity="0.6"/>
+    <circle cx="60" cy="35" r="4" fill="#58a6ff"/>
+    <line x1="76" y1="51" x2="86" y2="61" stroke="#58a6ff" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <text x="240" y="55" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="28" font-weight="700" fill="#f0f6fc">Deep-Scout</text>
+  <text x="240" y="78" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+        font-size="12" fill="#8b949e" letter-spacing="4">SECRET SCANNER</text>
+
+  <text x="240" y="98" font-family="'SF Mono', 'Fira Code', monospace" font-size="9"
+        fill="#484f58" letter-spacing="1">CLI · REGEX · ENTROPY · REMEDIATION</text>
+</svg>

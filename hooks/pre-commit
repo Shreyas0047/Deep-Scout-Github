@@ -1,0 +1,30 @@
+#!/bin/bash
+# Deep-Scout pre-commit hook
+# Installed via: deep-scout install-hook
+
+echo "🔐 Running Deep-Scout pre-commit hook..."
+
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(py|js|ts|java|go|rb|php|json|yaml|yml|env|sh|bash|txt|md|cfg|conf|xml|pem|key|crt)$')
+
+if [ -z "$STAGED_FILES" ]; then
+    echo "No relevant files to scan."
+    exit 0
+fi
+
+echo "$STAGED_FILES" | xargs deep-scout scan --files-only --fail-on-secret 2>/dev/null
+
+if [ $? -eq 1 ]; then
+    echo ""
+    echo "❌ Commit blocked: Secrets detected in staged files"
+    echo ""
+    echo "To ignore (not recommended):"
+    echo "  git commit --no-verify"
+    echo ""
+    echo "To add to whitelist (if false positive):"
+    echo "  deep-scout whitelist add --pattern \"<value>\" --reason \"<explanation>\""
+    echo ""
+    exit 1
+fi
+
+echo "✅ No secrets detected. Proceeding with commit."
+exit 0
