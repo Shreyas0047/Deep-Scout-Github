@@ -54,13 +54,11 @@ def walk_files(
     max_file_bytes: int = 5 * 1024 * 1024,
 ) -> list[str]:
     files: list[str] = []
-    root_path = Path(root)
 
     for dirpath_str, dirnames, filenames in os.walk(root):
         dirpath = Path(dirpath_str)
 
         if exclude_paths:
-            rel_dir = str(dirpath.relative_to(root_path)) if dirpath != root_path else ""
             dirnames[:] = [
                 d for d in dirnames
                 if not any(fnmatch(str(dirpath / d), p) for p in exclude_paths)

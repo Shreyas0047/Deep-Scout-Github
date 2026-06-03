@@ -57,39 +57,39 @@ class ScanProgress:
         self.repos: dict[str, RepoProgress] = {}
         self._lock = threading.Lock()
 
-    def start_repo(self, name: str):
+    def start_repo(self, name: str) -> None:
         with self._lock:
             rp = RepoProgress(name)
             rp.state = RepoState.SCANNING
             rp.start_time = time.monotonic()
             self.repos[name] = rp
 
-    def set_total_files(self, name: str, total: int):
+    def set_total_files(self, name: str, total: int) -> None:
         with self._lock:
             rp = self.repos.get(name)
             if rp:
                 rp.total_files = total
 
-    def inc_file(self, name: str):
+    def inc_file(self, name: str) -> None:
         with self._lock:
             rp = self.repos.get(name)
             if rp:
                 rp.scanned_files += 1
 
-    def inc_secret(self, name: str):
+    def inc_secret(self, name: str) -> None:
         with self._lock:
             rp = self.repos.get(name)
             if rp:
                 rp.secrets_count += 1
 
-    def complete_repo(self, name: str):
+    def complete_repo(self, name: str) -> None:
         with self._lock:
             rp = self.repos.get(name)
             if rp:
                 rp.state = RepoState.COMPLETED
                 rp.end_time = time.monotonic()
 
-    def fail_repo(self, name: str, error: str):
+    def fail_repo(self, name: str, error: str) -> None:
         with self._lock:
             rp = self.repos.get(name)
             if rp:
@@ -171,7 +171,7 @@ def run_progress_display(
     rate_limit_remaining: int,
     rate_limit_total: int,
     authenticated_user: str = "",
-):
+) -> None:
     start_time = time.monotonic()
 
     header = Table.grid(padding=(0, 1))

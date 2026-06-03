@@ -18,7 +18,7 @@ def _resolve_env_vars(value: Any, seen: set[str] | None = None) -> Any:
     if seen is None:
         seen = set()
     if isinstance(value, str):
-        def _replace(m: re.Match) -> str:
+        def _replace(m: re.Match[str]) -> Any:
             var_name = m.group(1)
             if var_name in seen:
                 return m.group(0)
@@ -35,7 +35,7 @@ def _resolve_env_vars(value: Any, seen: set[str] | None = None) -> Any:
     return value
 
 
-def _deep_merge(base: dict, override: dict) -> dict:
+def _deep_merge(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
     merged = dict(base)
     for key, value in override.items():
         if key in merged and isinstance(merged[key], dict) and isinstance(value, dict):

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from typing import NamedTuple
+from typing import Any, NamedTuple
 
 
 class RegexPattern(NamedTuple):
@@ -43,7 +43,7 @@ BUILTIN_PATTERNS: list[RegexPattern] = [
 
 
 class RegexDetector:
-    def __init__(self, custom_patterns: list[dict] | None = None):
+    def __init__(self, custom_patterns: list[dict[str, Any]] | None = None) -> None:
         self.patterns = list(BUILTIN_PATTERNS)
         if custom_patterns:
             for cp in custom_patterns:
@@ -54,8 +54,8 @@ class RegexDetector:
                     description=cp.get("description", ""),
                 ))
 
-    def scan_line(self, line: str, line_number: int, file_path: str, repo_name: str) -> list[dict]:
-        results: list[dict] = []
+    def scan_line(self, line: str, line_number: int, file_path: str, repo_name: str) -> list[dict[str, Any]]:
+        results: list[dict[str, Any]] = []
         for p in self.patterns:
             for match in p.pattern.finditer(line):
                 results.append({

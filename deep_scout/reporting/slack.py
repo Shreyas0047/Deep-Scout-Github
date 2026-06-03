@@ -93,6 +93,6 @@ def build_slack_payload(findings: list[Finding], org: str) -> dict[str, Any]:
     return {"blocks": blocks}
 
 
-def send_slack_notification(webhook_url: str, payload: dict[str, Any]):
+def send_slack_notification(webhook_url: str, payload: dict[str, Any]) -> None:
     resp = requests.post(webhook_url, json=payload, timeout=15)
     resp.raise_for_status()

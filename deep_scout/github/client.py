@@ -43,13 +43,13 @@ class GitHubClient:
         self._min_interval = 1.0 / requests_per_second
         self._last_request = 0.0
 
-    def _throttle(self):
+    def _throttle(self) -> None:
         elapsed = time.monotonic() - self._last_request
         if elapsed < self._min_interval:
             time.sleep(self._min_interval - elapsed)
         self._last_request = time.monotonic()
 
-    def _handle_rate_limits(self, response: requests.Response):
+    def _handle_rate_limits(self, response: requests.Response) -> None:
         self.rate_limit_remaining = int(response.headers.get("X-RateLimit-Remaining", 0))
         self.rate_limit_reset = int(response.headers.get("X-RateLimit-Reset", 0))
 
@@ -57,7 +57,7 @@ class GitHubClient:
             sleep_time = max(self.rate_limit_reset - time.time(), 0) + 1
             time.sleep(sleep_time)
 
-    def _request(self, method: str, path: str, **kwargs) -> requests.Response:
+    def _request(self, method: str, path: str, **kwargs: Any) -> requests.Response:
         url = f"{self.base_url}{path}" if path.startswith("/") else path
         for attempt in range(self.max_retries):
             self._throttle()
@@ -71,16 +71,16 @@ class GitHubClient:
                     continue
                 resp.raise_for_status()
                 return resp
-            except requests.RequestException as e:
+            except requests.RequestException:
                 if attempt == self.max_retries - 1:
                     raise
                 time.sleep(2 ** attempt)
         raise RuntimeError("Unreachable")
 
-    def get(self, path: str, **kwargs) -> requests.Response:
+    def get(self, path: str, **kwargs: Any) -> requests.Response:
         return self._request("GET", path, **kwargs)
 
-    def get_paginated(self, path: str, per_page: int = 100, **kwargs) -> list[dict[str, Any]]:
+    def get_paginated(self, path: str, per_page: int = 100, **kwargs: Any) -> list[dict[str, Any]]:
         results: list[dict[str, Any]] = []
         page = 1
         while True:

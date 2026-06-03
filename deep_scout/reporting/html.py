@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from pathlib import Path
 
-from jinja2 import Environment, select_autoescape
+from jinja2 import Environment
 
 from deep_scout.reporting.base import Finding
 
@@ -330,5 +330,5 @@ def build_html_report(findings: list[Finding], org: str, scan_duration: float) -
     return html
 
 
-def write_html_report(html: str, output_path: str):
+def write_html_report(html: str, output_path: str) -> None:
     Path(output_path).write_text(html)

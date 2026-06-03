@@ -57,6 +57,6 @@ def build_report(findings: list[Finding], org: str, scan_duration: float) -> dic
     return report
 
 
-def write_json_report(report: dict[str, Any], output_path: str, indent: int = 2):
+def write_json_report(report: dict[str, Any], output_path: str, indent: int = 2) -> None:
     with open(output_path, "w") as f:
         json.dump(report, f, indent=indent)

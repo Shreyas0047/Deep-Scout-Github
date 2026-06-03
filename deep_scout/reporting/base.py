@@ -24,6 +24,6 @@ class Finding:
     remediation: Optional[RemediationInfo] = None
     remediation_url: Optional[str] = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if self.remediation is None:
             self.remediation = get_remediation(self.secret_type)

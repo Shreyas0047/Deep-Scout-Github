@@ -40,5 +40,5 @@ def shallow_clone(url: str, depth: int = 100, cache_dir: str | None = None, ttl_
     return str(clone_path)
 
 
-def cleanup(path: str):
+def cleanup(path: str) -> None:
     shutil.rmtree(path, ignore_errors=True)

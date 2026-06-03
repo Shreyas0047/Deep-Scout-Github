@@ -3,7 +3,7 @@ from __future__ import annotations
 import concurrent.futures
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from deep_scout.detectors.entropy import EntropyDetector
 from deep_scout.detectors.regex import RegexDetector
@@ -16,7 +16,7 @@ from deep_scout.utils.whitelist import Whitelist
 
 
 class Scanner:
-    def __init__(self, config: dict):
+    def __init__(self, config: dict[str, Any]) -> None:
         self.config = config
         gh_conf = config["github"]
         token = os.environ.get("GITHUB_TOKEN") or ""
@@ -43,7 +43,7 @@ class Scanner:
         )
 
         perf = config["performance"]
-        self.parallel_workers = perf.get("parallel_workers", 0) or os.cpu_count() * 2
+        self.parallel_workers = perf.get("parallel_workers", 0) or (os.cpu_count() or 1) * 2
         self.parallel_repos = perf.get("parallel_repos", 3)
 
         scan_cfg = config["scanning"]
@@ -181,11 +181,11 @@ class Scanner:
                 for r in filtered_repos
             }
             for future in concurrent.futures.as_completed(future_map):
-                repo = future_map[future]
+                _repo = future_map[future]
                 try:
                     repo_findings = future.result()
                     all_findings.extend(repo_findings)
-                except Exception as e:
+                except Exception:
                     pass
 
         all_findings = self.deduplicate(all_findings)

@@ -4,11 +4,13 @@ import shutil
 import threading
 import time
 from pathlib import Path
+from typing import Any
 
 import click
 
 from deep_scout.config import load_config, loaded_project_config
 from deep_scout.detectors.entropy import shannon_entropy
+from deep_scout.reporting.base import Finding
 from deep_scout.reporting.html import build_html_report, write_html_report
 from deep_scout.reporting.json_report import build_report, write_json_report
 from deep_scout.reporting.slack import build_slack_payload, send_slack_notification
@@ -19,7 +21,7 @@ from deep_scout.utils.whitelist import _BUILTIN_RULES
 
 @click.group()
 @click.version_option(version="1.0.0", prog_name="deep-scout")
-def cli():
+def cli() -> None:
     """Deep-Scout GitHub — deep reconnaissance for secrets in GitHub organizations."""
 
 
@@ -34,7 +36,9 @@ def cli():
 @click.option("--no-entropy", is_flag=True, help="Disable entropy detection")
 @click.option("--no-regex", is_flag=True, help="Disable regex detection")
 @click.option("--strict", is_flag=True, help="Ignore project-level config files (use only ~/.deep-scout/config.yaml)")
-def scan(org, repo, depth, entropy_threshold, output, output_format, fail_on_secret, no_entropy, no_regex, strict):
+def scan(  # type: ignore[no-untyped-def]
+    org, repo, depth, entropy_threshold, output, output_format, fail_on_secret, no_entropy, no_regex, strict,
+) -> None:
     """Scan a GitHub organization for accidentally committed secrets."""
     if loaded_project_config():
         if strict:
@@ -78,11 +82,11 @@ def scan(org, repo, depth, entropy_threshold, output, output_format, fail_on_sec
 
     progress = ScanProgress(org, total_repo_count)
 
-    findings: list = []
+    findings: list[Finding] = []
     exception: list[Exception] = []
     start_ts = time.monotonic()
 
-    def _run_scan():
+    def _run_scan() -> None:
         try:
             result = scanner.scan_org(org, repo_filter=repo, progress=progress)
             findings.extend(result)
@@ -148,12 +152,12 @@ def scan(org, repo, depth, entropy_threshold, output, output_format, fail_on_sec
         click.echo("   No secrets found. ✅")
 
 
-def _print_remediation_summary(findings: list[Finding]):
+def _print_remediation_summary(findings: list[Finding]) -> None:
     click.echo("━" * 60)
     click.echo("  🚨 CRITICAL & HIGH FINDINGS — Immediate Action Required")
     click.echo("━" * 60)
 
-    grouped: dict[str, dict] = {}
+    grouped: dict[str, dict[str, Any]] = {}
     for f in findings:
         key = f.secret_type
         if key not in grouped:
@@ -177,7 +181,7 @@ def _print_remediation_summary(findings: list[Finding]):
 
 @cli.command()
 @click.argument("string")
-def entropy(string):
+def entropy(string: str) -> None:
     """Calculate Shannon entropy of a given string."""
     e = shannon_entropy(string)
     label = "HIGH" if e >= 4.5 else ("MEDIUM" if e >= 3.5 else "LOW")
@@ -186,12 +190,12 @@ def entropy(string):
 
 
 @cli.group()
-def whitelist():
+def whitelist() -> None:
     """Manage whitelist patterns."""
 
 
 @whitelist.command("list")
-def whitelist_list():
+def whitelist_list() -> None:
     """Display all built-in and user-added whitelist patterns."""
     click.echo("Deep-Scout Whitelist (Built-in Patterns)")
     click.echo("━" * 60)
@@ -204,7 +208,7 @@ def whitelist_list():
 @whitelist.command()
 @click.option("--pattern", required=True, help="Pattern to add")
 @click.option("--reason", required=True, help="Explanation for why this is whitelisted")
-def add(pattern, reason):
+def add(pattern: str, reason: str) -> None:
     """Add a custom whitelist entry."""
     config_path = Path.cwd() / ".deep-scout.yaml"
     if not config_path.exists():
@@ -230,7 +234,7 @@ def add(pattern, reason):
 
 @whitelist.command()
 @click.option("--pattern", required=True, help="Pattern to remove")
-def remove(pattern):
+def remove(pattern: str) -> None:
     """Remove a custom whitelist entry."""
     config_path = Path.cwd() / ".deep-scout.yaml"
     if not config_path.exists():
@@ -259,14 +263,14 @@ def remove(pattern):
 
 
 @cli.command("install-hook")
-def install_hook():
+def install_hook() -> None:
     """Install the pre-commit git hook for secret scanning."""
     git_hooks_dir = Path.cwd() / ".git" / "hooks"
     if not git_hooks_dir.exists():
         click.echo("❌ Not a git repository. Run this command from the root of a git repo.", err=True)
         raise SystemExit(4)
 
-    src = importlib.resources.files("deep_scout") / "hooks" / "pre-commit"
+    src = Path(str(importlib.resources.files("deep_scout"))) / "hooks" / "pre-commit"
     dest = git_hooks_dir / "pre-commit"
 
     if not src.exists():

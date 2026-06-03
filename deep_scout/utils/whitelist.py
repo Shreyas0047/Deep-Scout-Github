@@ -6,10 +6,11 @@ from typing import Any
 
 
 class WhitelistEntry:
-    def __init__(self, pattern: str, reason: str = "", entry_type: str = "regex"):
+    def __init__(self, pattern: str, reason: str = "", entry_type: str = "regex") -> None:
         self.pattern = pattern
         self.reason = reason
         self.entry_type = entry_type
+        self._regex: re.Pattern[str] | None
         if entry_type == "regex":
             self._regex = re.compile(pattern)
         else:
@@ -62,5 +63,5 @@ class Whitelist:
                 return True
         return False
 
-    def filter_findings(self, findings: list[dict], file_path: str = "") -> list[dict]:
+    def filter_findings(self, findings: list[dict[str, Any]], file_path: str = "") -> list[dict[str, Any]]:
         return [f for f in findings if not self.is_whitelisted(f.get("full_value", ""), file_path or f.get("file_path", ""))]

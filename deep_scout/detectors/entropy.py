@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import math
 import re
+from typing import Any
 
 CANDIDATE_RE = re.compile(r"[A-Za-z0-9+/=_.\-]{16,256}")
 
@@ -46,14 +47,14 @@ class EntropyDetector:
         min_length: int = 16,
         max_length: int = 256,
         enable_context_analysis: bool = True,
-    ):
+    ) -> None:
         self.threshold = threshold
         self.min_length = min_length
         self.max_length = max_length
         self.enable_context_analysis = enable_context_analysis
 
-    def scan_line(self, line: str, line_number: int, file_path: str, repo_name: str) -> list[dict]:
-        results: list[dict] = []
+    def scan_line(self, line: str, line_number: int, file_path: str, repo_name: str) -> list[dict[str, Any]]:
+        results: list[dict[str, Any]] = []
         for match in CANDIDATE_RE.finditer(line):
             candidate = match.group(0)
             if len(candidate) < self.min_length:
