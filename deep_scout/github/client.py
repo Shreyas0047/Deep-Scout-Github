@@ -95,8 +95,14 @@ class GitHubClient:
             page += 1
         return results
 
-    def list_organization_repos(self, org: str) -> list[Repository]:
-        data = self.get_paginated(f"/orgs/{org}/repos", type="all", sort="full_name")
+    def list_organization_repos(self, name: str) -> list[Repository]:
+        try:
+            data = self.get_paginated(f"/orgs/{name}/repos", type="all", sort="full_name")
+        except requests.exceptions.HTTPError as e:
+            if e.response is not None and e.response.status_code == 404:
+                data = self.get_paginated(f"/users/{name}/repos", type="all", sort="full_name")
+            else:
+                raise
         repos = []
         for item in data:
             repos.append(Repository(

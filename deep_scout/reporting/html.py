@@ -174,10 +174,10 @@ _TEMPLATE_STR = r"""<!DOCTYPE html>
           {% endfor %}
         </ul>
 
-        {% if f.remediation.revoke_urls and f.remediation.revoke_urls[0] not in _na_urls %}
+        {% if f.remediation.revoke_urls and is_not_na(f.remediation.revoke_urls[0]) %}
         <div class="btn-row">
           {% for url in f.remediation.revoke_urls %}
-          <a class="btn btn-danger" href="{{ url }}" target="_blank" rel="noopener">🚨 Revoke at {{ url.split('//')[1].split('/')[0] }}</a>
+          <a class="btn btn-danger" href="{{ url }}" target="_blank" rel="noopener">🚨 Revoke at {{ extract_domain(url) }}</a>
           {% endfor %}
         </div>
         {% endif %}
@@ -310,7 +310,12 @@ def build_html_report(findings: list[Finding], org: str, scan_duration: float) -
 
     def _is_not_na(url: str) -> bool:
         return not any(url.startswith(prefix) for prefix in _NA_URL_PREFIXES)
-    _na_urls_list = list(_NA_URL_PREFIXES)
+
+    def _extract_domain(url: str) -> str:
+        try:
+            return url.split("//")[1].split("/")[0]
+        except (IndexError, AttributeError):
+            return url
 
     html = template.render(
         org=org,
@@ -319,7 +324,8 @@ def build_html_report(findings: list[Finding], org: str, scan_duration: float) -
         findings=sorted_findings,
         summary=summary,
         duration_seconds=round(scan_duration, 1),
-        _na_urls=_na_urls_list,
+        is_not_na=_is_not_na,
+        extract_domain=_extract_domain,
     )
     return html
 

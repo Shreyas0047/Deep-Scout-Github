@@ -24,7 +24,7 @@ def cli():
 
 
 @cli.command()
-@click.option("--org", required=True, help="GitHub organization name to scan")
+@click.option("--org", required=True, help="GitHub organization or username to scan")
 @click.option("--repo", help="Specific repository to scan (scans all repos in org if omitted)")
 @click.option("--depth", default=100, show_default=True, help="Number of commits to clone")
 @click.option("--entropy-threshold", default=4.5, show_default=True, help="Shannon entropy threshold (bits/byte)")
